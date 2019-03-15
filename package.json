@@ -20,7 +20,7 @@
   "dependencies": {
     "@fortawesome/fontawesome-free": "^5.7.2",
     "jquery": "^3.3.1",
-    "vue": "^2.6.9"  just a test
-    
+    "vue": "^2.6.9"
+
   }
 }
