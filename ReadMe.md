@@ -8,7 +8,7 @@ https://www.phillipsj.net/posts/working-with-sql-server-on-linux-for-dotnet-deve
 Adding GeoLocation to EF Core
 https://www.nuget.org/packages/Microsoft.EntityFrameworkCore.SqlServer.NetTopologySuite/
 
-
+// * mPerholtz * * HTTPS: * *  when I run dotnet restore at least under the Swarley > cmd > wildermuth demo > i get Successfully installed the ASP.NET Core HTTPS Development Certificate. Look at this further to get https running
 
 // * mPerholtz * This will scaffold out the controller classes 
 $ dotnet aspnet-codegenerator controller -name ContactUsMessageController -m ContactUsMessage -dc PortfolioContext --relativeFolderPath Controllers
