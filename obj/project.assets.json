@@ -13598,11 +13598,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "/Users/mperholtz/Documents/AppDev/Portfolio/Portfolio.csproj",
+      "projectUniqueName": "/Users/mperholtz/Documents/AppDev/Portfolio-Scale-UP/Portfolio.csproj",
       "projectName": "Portfolio",
-      "projectPath": "/Users/mperholtz/Documents/AppDev/Portfolio/Portfolio.csproj",
+      "projectPath": "/Users/mperholtz/Documents/AppDev/Portfolio-Scale-UP/Portfolio.csproj",
       "packagesPath": "/Users/mperholtz/.nuget/packages/",
-      "outputPath": "/Users/mperholtz/Documents/AppDev/Portfolio/obj/",
+      "outputPath": "/Users/mperholtz/Documents/AppDev/Portfolio-Scale-UP/obj/",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "/usr/local/share/dotnet/sdk/NuGetFallbackFolder"
