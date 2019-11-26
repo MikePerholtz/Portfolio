@@ -1,14 +1,26 @@
 let path = require("path");
 const VueLoaderPlugin = require('vue-loader/lib/plugin')
 
-
 module.exports = {
-  mode: 'production',
+  mode: 'development',
   entry: "./wwwroot/js/site.js",
   output: {
     filename: "app.js",
     path: path.resolve("./wwwroot/dist")
   },
+
+  // mPerholtz Browser Console warning:
+  //  * [Vue warn]: You are using the runtime-only build of Vue where the template compiler is not available. 
+  //  * Either pre-compile the templates into render functions, or use the compiler-included build.
+  // So fix below is if using <template> in Vue:
+  // https://vuejs.org/v2/guide/installation.html#Runtime-Compiler-vs-Runtime-only
+  resolve: {
+      alias: {
+          'vue$': 'vue/dist/vue.esm.js'
+      },
+      extensions: ['*', '.js', '.vue', '.json']
+  },
+  
   // mPerholtz webpack output will be a resolved path to 
   // iis' wwwroot/dist folder, all code in a file called app.js
   devtool: "source-map",
