@@ -2966,11 +2966,6 @@
       "FileKind": "mvc"
     },
     {
-      "FilePath": "/Users/mperholtz/Documents/AppDev/Portfolio-Scale-UP/Views/Root/index.cshtml",
-      "TargetPath": "Views/Root/index.cshtml",
-      "FileKind": "mvc"
-    },
-    {
       "FilePath": "/Users/mperholtz/Documents/AppDev/Portfolio-Scale-UP/Views/ContactUsMessage/Edit.cshtml",
       "TargetPath": "Views/ContactUsMessage/Edit.cshtml",
       "FileKind": "mvc"
@@ -2978,11 +2973,6 @@
     {
       "FilePath": "/Users/mperholtz/Documents/AppDev/Portfolio-Scale-UP/Views/Home/Index.cshtml",
       "TargetPath": "Views/Home/Index.cshtml",
-      "FileKind": "mvc"
-    },
-    {
-      "FilePath": "/Users/mperholtz/Documents/AppDev/Portfolio-Scale-UP/Views/ContactUsMessage/Index.cshtml",
-      "TargetPath": "Views/ContactUsMessage/Index.cshtml",
       "FileKind": "mvc"
     },
     {
@@ -3013,6 +3003,11 @@
     {
       "FilePath": "/Users/mperholtz/Documents/AppDev/Portfolio-Scale-UP/Views/Shared/_CookieConsentPartial.cshtml",
       "TargetPath": "Views/Shared/_CookieConsentPartial.cshtml",
+      "FileKind": "mvc"
+    },
+    {
+      "FilePath": "/Users/mperholtz/Documents/AppDev/Portfolio-Scale-UP/Views/ContactUsMessage/Index_disable.cshtml",
+      "TargetPath": "Views/ContactUsMessage/Index_disable.cshtml",
       "FileKind": "mvc"
     },
     {

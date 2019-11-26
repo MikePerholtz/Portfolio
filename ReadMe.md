@@ -10,6 +10,7 @@ https://www.nuget.org/packages/Microsoft.EntityFrameworkCore.SqlServer.NetTopolo
 
 // * mPerholtz * * HTTPS: * *  when I run dotnet restore at least under the Swarley > cmd > wildermuth demo > i get Successfully installed the ASP.NET Core HTTPS Development Certificate. Look at this further to get https running
 
+
 // * mPerholtz * This will scaffold out the controller classes 
 $ dotnet aspnet-codegenerator controller -name ContactUsMessageController -m ContactUsMessage -dc PortfolioContext --relativeFolderPath Controllers
  
@@ -20,5 +21,7 @@ $ dotnet ef migrations add InitialCreate
 
 // once the migration is complete then ef will create the databases
 $ dotnet ef database update
+
+// see mPerholtz lee_scratch_perry project
 
 

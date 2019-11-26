@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
@@ -62,13 +63,13 @@ namespace Portfolio
 
             // mPerholtz See Wildermuth Vue Js Course > Getting Started > Where We're Starting
             // This is a trick to reroute lib folder requests to node_modules folder
-            // if (env.IsDevelopment()) {
-            //     app.UseStaticFiles(new StaticFileOptions()
-            //     {
-            //         RequestPath = "/lib",
-            //         FileProvider = new PhysicalFileProvider(Path.Combine(env.ContentRootPath, "node_modules/"))
-            //     });
-            // }
+            if (env.IsDevelopment()) {
+                app.UseStaticFiles(new StaticFileOptions()
+                {
+                    RequestPath = "/lib",
+                    FileProvider = new Microsoft.Extensions.FileProviders.PhysicalFileProvider(Path.Combine(env.ContentRootPath, "node_modules/"))
+                });
+            }
 
             // * mPerholtz This redirects our site to https and we get warnings for now
             //app.UseHttpsRedirection();
@@ -80,18 +81,19 @@ namespace Portfolio
             app.UseMvc(routes =>
             {
                 routes.MapRoute(
-                        name: "ContactUsMessage",
+                        name: "Home",
                         template: "",
-                        defaults: new { controller = "ContactUsMessage", action = "Index" });
+                        defaults: new { controller = "Home", action = "Index" });
+
                 // routes.MapRoute(
-                //         name: "Create",
+                //         name: "ContactUsMessage",
                 //         template: "",
-                //         defaults: new { controller = "ContactUsMessage", action = "Create" });
+                //         defaults: new { controller = "ContactUsMessage", action = "Index" });
 
                 routes.MapRoute(
                         name: "default",
                         template: "_/{action}",
-                        defaults: new { controller = "ContactUsMessage" });
+                        defaults: new { controller = "Home" });
             });
         }
     }

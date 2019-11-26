@@ -2,7 +2,23 @@
     ViewData["Title"] = "Home Page";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+@section scripts {
+  <!-- Script for polyfilling Promises on IE9 and 10 -->
+  <script src="/lib/vue/dist/vue.js"></script>
+  <script src='https://cdn.polyfill.io/v2/polyfill.min.js'></script>
+
+  <!-- <script src="~/dist/app.js"></script> -->
+}
+
+<div id="profile-main-vue">
+
+  <!-- <transition name="fade">
+    <router-view></router-view>
+  </transition> -->
 </div>
+
+<div class="text-center">
+    <h1 class="display-4">Bienvenido</h1>
+    <p>Lorum ipsum bacon.</p>
+</div>
+
