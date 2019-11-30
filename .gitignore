@@ -348,3 +348,10 @@ healthchecksdb
 
 # Backup folder for Package Reference Convert tool in Visual Studio 2017
 MigrationBackup/
+
+
+# Webpack Ignore
+.DS_Store
+dist/
+npm-debug.log
+yarn-error.log

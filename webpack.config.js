@@ -1,12 +1,15 @@
 let path = require("path");
 const VueLoaderPlugin = require('vue-loader/lib/plugin')
 
+// mPerholtz webpack output will be a resolved path to 
+// iis' wwwroot/dist folder, all code in a file called app.js
 module.exports = {
   mode: 'development',
-  entry: "./wwwroot/js/site.js",
+  entry: { "main": "./wwwroot/js/site.js" },
   output: {
     filename: "app.js",
-    path: path.resolve("./wwwroot/dist")
+    path: path.resolve("./wwwroot/dist"),
+    publicPath: '/dist/'
   },
 
   // mPerholtz Browser Console warning:
@@ -20,11 +23,8 @@ module.exports = {
       },
       extensions: ['*', '.js', '.vue', '.json']
   },
-  
-  // mPerholtz webpack output will be a resolved path to 
-  // iis' wwwroot/dist folder, all code in a file called app.js
-  devtool: "source-map",
   // mPerholtz setup debugging in webpack with source map
+  devtool: "source-map",
   module: {
     rules: [
       {
