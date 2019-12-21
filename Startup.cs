@@ -40,20 +40,20 @@ namespace Portfolio
             .AddEntityFrameworkStores<PortfolioContext>();
 
             services.AddAuthentication()
-        .AddCookie()
-        .AddJwtBearer(cfg =>
-        {
-          cfg.TokenValidationParameters = new TokenValidationParameters()
-          {
-            ValidateIssuer = true,
-            ValidIssuer = Configuration["Security:Tokens:Issuer"],
-            ValidateAudience = true,
-            ValidAudience = Configuration["Security:Tokens:Audience"],
-            ValidateIssuerSigningKey = true,
-            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["Security:Tokens:Key"])),
+            .AddCookie()
+            .AddJwtBearer(cfg =>
+            {
+                cfg.TokenValidationParameters = new TokenValidationParameters()
+                {
+                ValidateIssuer = true,
+                ValidIssuer = Configuration["Security:Tokens:Issuer"],
+                ValidateAudience = true,
+                ValidAudience = Configuration["Security:Tokens:Audience"],
+                ValidateIssuerSigningKey = true,
+                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["Security:Tokens:Key"])),
 
-          };
-        });
+                };
+            });
             
             services.Configure<CookiePolicyOptions>(options =>
             {
