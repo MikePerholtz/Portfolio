@@ -7,16 +7,17 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SpaServices.Webpack;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.SqlServer;
 using Portfolio.Data;
 using Portfolio.Models;
-
-
+using System.Text;
 
 namespace Portfolio
 {
@@ -32,6 +33,28 @@ namespace Portfolio
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddIdentity<IdentityUser, IdentityRole>(cfg =>
+            {
+                cfg.User.RequireUniqueEmail = true;
+            })
+            .AddEntityFrameworkStores<PortfolioContext>();
+
+            services.AddAuthentication()
+        .AddCookie()
+        .AddJwtBearer(cfg =>
+        {
+          cfg.TokenValidationParameters = new TokenValidationParameters()
+          {
+            ValidateIssuer = true,
+            ValidIssuer = Configuration["Security:Tokens:Issuer"],
+            ValidateAudience = true,
+            ValidAudience = Configuration["Security:Tokens:Audience"],
+            ValidateIssuerSigningKey = true,
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["Security:Tokens:Key"])),
+
+          };
+        });
+            
             services.Configure<CookiePolicyOptions>(options =>
             {
                 // This lambda determines whether user consent for non-essential cookies is needed for a given request.
@@ -81,6 +104,8 @@ namespace Portfolio
             app.UseCookiePolicy();
 
             //app.UseMvcWithDefaultRoute();
+
+            app.UseAuthentication();
 
             app.UseMvc(routes =>
             {

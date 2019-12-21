@@ -11,6 +11,9 @@
           "lib/netstandard2.0/GeoAPI.dll": {}
         }
       },
+      "IdentityServer4.EntityFramework/3.1.0": {
+        "type": "package"
+      },
       "Microsoft.AspNet.WebApi.Client/5.2.6": {
         "type": "package",
         "dependencies": {
@@ -4871,6 +4874,21 @@
         "src/Operation/Buffer/JoinStyle.cs",
         "src/Properties/AssemblyInfo.cs",
         "src/ValueParser.cs"
+      ]
+    },
+    "IdentityServer4.EntityFramework/3.1.0": {
+      "sha512": "l0PO6efPkbxZuHHbNP7ZmnZ19KuG0tHixHWcURGJ5up0A9PQeY0BW9ni14t5JQvuIg/4kXCJqgOH9sbgEmGTTA==",
+      "type": "package",
+      "path": "identityserver4.entityframework/3.1.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "icon.jpg",
+        "identityserver4.entityframework.3.1.0.nupkg.sha512",
+        "identityserver4.entityframework.nuspec",
+        "lib/netcoreapp3.1/IdentityServer4.EntityFramework.dll",
+        "lib/netcoreapp3.1/IdentityServer4.EntityFramework.pdb",
+        "lib/netcoreapp3.1/IdentityServer4.EntityFramework.xml"
       ]
     },
     "Microsoft.AspNet.WebApi.Client/5.2.6": {
@@ -13583,6 +13601,7 @@
   },
   "projectFileDependencyGroups": {
     ".NETCoreApp,Version=v2.2": [
+      "IdentityServer4.EntityFramework >= 3.1.0",
       "Microsoft.AspNetCore.App >= 2.2.0",
       "Microsoft.AspNetCore.Razor.Design >= 2.2.0",
       "Microsoft.EntityFrameworkCore.SqlServer >= 2.2.2",
@@ -13630,6 +13649,10 @@
     "frameworks": {
       "netcoreapp2.2": {
         "dependencies": {
+          "IdentityServer4.EntityFramework": {
+            "target": "Package",
+            "version": "[3.1.0, )"
+          },
           "Microsoft.AspNetCore.App": {
             "suppressParent": "All",
             "target": "Package",
@@ -13673,5 +13696,16 @@
         "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/3.0.100/RuntimeIdentifierGraph.json"
       }
     }
-  }
+  },
+  "logs": [
+    {
+      "code": "NU1202",
+      "level": "Error",
+      "message": "Package IdentityServer4.EntityFramework 3.1.0 is not compatible with netcoreapp2.2 (.NETCoreApp,Version=v2.2). Package IdentityServer4.EntityFramework 3.1.0 supports: netcoreapp3.1 (.NETCoreApp,Version=v3.1)",
+      "libraryId": "IdentityServer4.EntityFramework",
+      "targetGraphs": [
+        ".NETCoreApp,Version=v2.2"
+      ]
+    }
+  ]
 }
