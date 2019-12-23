@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.SpaServices;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Identity;
@@ -19,6 +20,7 @@ using Portfolio.Data;
 using Portfolio.Models;
 using System.Text;
 using Microsoft.Extensions.Hosting;
+using VueCliMiddleware;
 //using Microsoft.AspNetCore.SpaServices.VueCli;
 //using Microsoft.AspNetCore.SpaServices.Webpack;
 
@@ -27,20 +29,21 @@ namespace Portfolio
     public class Startup
     {
         
-
         public IConfiguration Configuration { get; }
 
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
-        }
-
-       
+        }       
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
             
+            services.AddControllersWithViews();
+
+            // Add AddRazorPages if the app uses Razor Pages.
+            services.AddRazorPages();
 
             services.AddDbContext<PortfolioContext>(conf =>
             {
@@ -76,10 +79,17 @@ namespace Portfolio
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
             
+            // In production, the Vue files will be served from this directory
+            services.AddSpaStaticFiles(configuration =>
+            {
+                configuration.RootPath = "ClientApp/dist";
+            });
 
-            services.AddMvc(option => 
-                option.EnableEndpointRouting = false
-            );
+            #region mPerholtz commented out for Vue CLI 4 and .Net Core 3
+            // services.AddMvc(option => 
+            //     option.EnableEndpointRouting = false
+            // );
+            #endregion
                     
         }
 
@@ -92,27 +102,33 @@ namespace Portfolio
                 // app.UseWebpackDevMiddleware(new WebpackDevMiddlewareOptions {
                 //     HotModuleReplacement = true;
                 // });
+                app.UseDeveloperExceptionPage();
+                
+                #region This is a trick to reroute lib folder requests to node_modules folder
+                
+                // mPerholtz See Wildermuth Vue Js Course > Getting Started > Where We're Starting
+                // This is a trick to reroute lib folder requests to node_modules folder
+
+                // app.UseStaticFiles(new StaticFileOptions()
+                // {
+                //     RequestPath = "/lib",
+                //     FileProvider = new Microsoft.Extensions.FileProviders.PhysicalFileProvider(Path.Combine(env.ContentRootPath, "node_modules/"))
+                // });
+                #endregion This is a trick to reroute lib folder requests to node_modules folder
+                
             }
             else
             {
-                app.UseExceptionHandler("/Home/Error");
+                app.UseExceptionHandler("/Error");
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
+                app.UseHttpsRedirection();
             }
 
             app.UseStaticFiles();
+            app.UseSpaStaticFiles();
 
-            // mPerholtz See Wildermuth Vue Js Course > Getting Started > Where We're Starting
-            // This is a trick to reroute lib folder requests to node_modules folder
-            if (env.IsDevelopment()) {
-                app.UseDeveloperExceptionPage();
-                
-                app.UseStaticFiles(new StaticFileOptions()
-                {
-                    RequestPath = "/lib",
-                    FileProvider = new Microsoft.Extensions.FileProviders.PhysicalFileProvider(Path.Combine(env.ContentRootPath, "node_modules/"))
-                });
-            }
+            app.UseRouting();
 
             // * mPerholtz This redirects our site to https and we get warnings for now
             //app.UseHttpsRedirection();
@@ -123,24 +139,51 @@ namespace Portfolio
 
             app.UseAuthentication();
 
-            app.UseMvc(routes =>
+            app.UseEndpoints(endpoints =>
             {
-                routes.MapRoute(
-                        name: "Home",
-                        template: "",
-                        defaults: new { controller = "Home", action = "Index" });
+                endpoints.MapControllerRoute(
+                    name: "default",
+                    pattern: "{controller}/{action=Index}/{id?}");
 
-                // routes.MapRoute(
-                //         name: "ContactUsMessage",
-                //         template: "",
-                //         defaults: new { controller = "ContactUsMessage", action = "Index" });
+                if (env.IsDevelopment())
+                {
+                    endpoints.MapToVueCliProxy(
+                        "{*path}",
+                        new SpaOptions { SourcePath = "ClientApp" },
+                        npmScript: "serve",
+                        regex: "Compiled successfully");
+                }
 
-                routes.MapRoute(
-                        name: "default",
-                        template: "_/{action}",
-                        defaults: new { controller = "Home" });
+                // Add MapRazorPages if the app uses Razor Pages. Since Endpoint Routing includes support for many frameworks, adding Razor Pages is now opt -in.
+                endpoints.MapRazorPages();
             });
 
+            #region UseMvc routes section commented out
+            // app.UseMvc(routes =>
+            // {
+            //     routes.MapRoute(
+            //             name: "Home",
+            //             template: "",
+            //             defaults: new { controller = "Home", action = "Index" });
+
+            //     // routes.MapRoute(
+            //     //         name: "ContactUsMessage",
+            //     //         template: "",
+            //     //         defaults: new { controller = "ContactUsMessage", action = "Index" });
+
+            //     routes.MapRoute(
+            //             name: "default",
+            //             template: "_/{action}",
+            //             defaults: new { controller = "Home" });
+            // });
+            #endregion
+
+            app.UseSpa(spa =>
+            {
+                spa.Options.SourcePath = "ClientApp";
+            });
+
+            #region app.UseSpa pre upgrade to Vue CLI 4 and .net core 3
             // app.UseSpa(spa => {
             //     spa.Options.SourcePath = "VueApp";
 
@@ -150,5 +193,6 @@ namespace Portfolio
             //     }
             // });
         }
+#endregion
     }
 }
