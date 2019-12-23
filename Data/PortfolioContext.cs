@@ -1,6 +1,5 @@
 using System;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.Extensions.Configuration;
@@ -13,7 +12,7 @@ namespace Portfolio.Data
 
   // mPerholtz Point Of Contention wether to use IdentityDbContext or just DbContext
   // IdentityContext inherits from DbContext so add's asp.net identity support (if needed)
-  public class PortfolioContext : IdentityDbContext<IdentityUser>
+  public class PortfolioContext : DbContext
   {
     private readonly IConfiguration _config;
 

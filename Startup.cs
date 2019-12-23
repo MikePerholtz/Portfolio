@@ -9,38 +9,52 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.SpaServices.Webpack;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.SqlServer;
 using Portfolio.Data;
 using Portfolio.Models;
 using System.Text;
+using Microsoft.Extensions.Hosting;
+//using Microsoft.AspNetCore.SpaServices.VueCli;
+//using Microsoft.AspNetCore.SpaServices.Webpack;
 
 namespace Portfolio
 {
     public class Startup
     {
+        
+
+        public IConfiguration Configuration { get; }
+
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
         }
 
-        public IConfiguration Configuration { get; }
+       
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            
+
+            services.AddDbContext<PortfolioContext>(conf =>
+            {
+                var connection = Configuration.GetConnectionString("BabylonSystemDb");
+                conf.UseSqlServer(connection, opt => opt.EnableRetryOnFailure());
+            });
+
             services.AddIdentity<IdentityUser, IdentityRole>(cfg =>
             {
                 cfg.User.RequireUniqueEmail = true;
-            })
-            .AddEntityFrameworkStores<PortfolioContext>();
+            });
+            
 
             services.AddAuthentication()
-            .AddCookie()
             .AddJwtBearer(cfg =>
             {
                 cfg.TokenValidationParameters = new TokenValidationParameters()
@@ -61,23 +75,23 @@ namespace Portfolio
                 options.CheckConsentNeeded = context => true;
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
+            
 
-            var connection = Configuration.GetConnectionString("BabylonSystemDb");
-            services.AddDbContext<PortfolioContext>(options => options.UseSqlServer(connection));
-
-            services.AddMvc();
+            services.AddMvc(option => 
+                option.EnableEndpointRouting = false
+            );
                     
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
             {
-                app.UseDeveloperExceptionPage();
-                app.UseWebpackDevMiddleware(new WebpackDevMiddlewareOptions {
-                    HotModuleReplacement = true
-                });
+                // mPerholtz obsolete in favor of Microsoft.AspNetCore.SpaServices.Extensions 
+                // app.UseWebpackDevMiddleware(new WebpackDevMiddlewareOptions {
+                //     HotModuleReplacement = true;
+                // });
             }
             else
             {
@@ -91,6 +105,8 @@ namespace Portfolio
             // mPerholtz See Wildermuth Vue Js Course > Getting Started > Where We're Starting
             // This is a trick to reroute lib folder requests to node_modules folder
             if (env.IsDevelopment()) {
+                app.UseDeveloperExceptionPage();
+                
                 app.UseStaticFiles(new StaticFileOptions()
                 {
                     RequestPath = "/lib",
@@ -124,6 +140,15 @@ namespace Portfolio
                         template: "_/{action}",
                         defaults: new { controller = "Home" });
             });
+
+            // app.UseSpa(spa => {
+            //     spa.Options.SourcePath = "VueApp";
+
+            //     if (env.IsDevelopment())
+            //     {
+            //         spa.UseVueCliServer(npmScript: "serve");
+            //     }
+            // });
         }
     }
 }

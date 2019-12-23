@@ -15,7 +15,7 @@ let router = new VueRouter({
     ]
 })
 
-router.
+//router.
 // router.beforeEach((to, from, next) => {
 //     if (to.meta.authRequired) {
         
