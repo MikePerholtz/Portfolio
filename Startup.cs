@@ -1,26 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Builder;
+﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.SpaServices;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
-using Microsoft.SqlServer;
 using Portfolio.Data;
-using Portfolio.Models;
 using System.Text;
 using Microsoft.Extensions.Hosting;
 using VueCliMiddleware;
+using Portfolio.Config;
+using System.Data.SqlClient;
 //using Microsoft.AspNetCore.SpaServices.VueCli;
 //using Microsoft.AspNetCore.SpaServices.Webpack;
 
@@ -28,12 +20,33 @@ namespace Portfolio
 {
     public class Startup
     {
-        
+        private string portfolioDbPaxxword = null;
+        private string _connection = null;
+        readonly IWebHostEnvironment HostingEnvironment;        
         public IConfiguration Configuration { get; }
 
-        public Startup(IConfiguration configuration)
+        public Startup(IWebHostEnvironment env)
         {
-            Configuration = configuration;
+
+            HostingEnvironment = env;
+
+            var builder = new ConfigurationBuilder()
+                .SetBasePath(env.ContentRootPath)
+                .AddJsonFile("appsettings.json", 
+                            optional: false, 
+                            reloadOnChange: true)
+                .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
+                .AddEnvironmentVariables();
+
+            if (env.IsDevelopment())
+            {
+                builder.AddUserSecrets<Startup>();
+            }
+
+            Configuration = builder.Build();
+            
+            
+
         }       
 
         // This method gets called by the runtime. Use this method to add services to the container.
@@ -45,11 +58,27 @@ namespace Portfolio
             // Add AddRazorPages if the app uses Razor Pages.
             services.AddRazorPages();
 
+           _connection = BuildDbConnectionString(Configuration);
+
             services.AddDbContext<PortfolioContext>(conf =>
             {
-                var connection = Configuration.GetConnectionString("BabylonSystemDb");
-                conf.UseSqlServer(connection, opt => opt.EnableRetryOnFailure());
+                conf.UseSqlServer(_connection, opt => opt.EnableRetryOnFailure());
             });
+            
+            
+            #region Strongly Typed Config Idea
+            // mPerholtz => see Rick Strahl's Album Viewer:
+            //Also make top level configuration available (for EF configuration and access to connection string)
+
+            // var config = new ApplicationConfiguration();
+            // Configuration.Bind("Application", config);
+            // services.AddSingleton(config);
+
+            // App.Configuration = config;
+            //services.AddSingleton<IConfigurationRoot>(Configuration);
+            #endregion Strongly Typed Config Idea
+            
+            services.AddSingleton<IConfiguration>(Configuration);
 
             services.AddIdentity<IdentityUser, IdentityRole>(cfg =>
             {
@@ -96,6 +125,13 @@ namespace Portfolio
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            #region Write the SQL Connectionstring to the browser for Debug/Troubleshooting
+            // app.Run(async (context) =>
+            // {
+            //     await context.Response.WriteAsync($"DB Connection: {_connection}");
+            // });
+            #endregion
+
             if (env.IsDevelopment())
             {
                 // mPerholtz obsolete in favor of Microsoft.AspNetCore.SpaServices.Extensions 
@@ -192,7 +228,27 @@ namespace Portfolio
             //         spa.UseVueCliServer(npmScript: "serve");
             //     }
             // });
-        }
-#endregion
+            #endregion
+        }     
+
+        /// <summary>
+        /// mPerholtz if this is dev mode we can tap into the local MS Secret Store to grab
+        /// db connection strings, passwords, etc. (see SM Secret Store in the ReadMe.md for more details)
+        /// </summary>
+        private static string BuildDbConnectionString(IConfiguration _config) 
+        {
+            
+            var dbSettings = _config.GetSection("Sql:Database")        //Get the values from local secret store .json file... 
+                                    .Get<DbSettings>() as DbSettings;  //And Assign them to our strongly typed POCO 
+
+            var builder = new SqlConnectionStringBuilder(dbSettings.ConnectionString);
+            builder.Password = dbSettings.DbPaxxword;
+
+            return builder.ConnectionString;
+
+        }     
     }
+
+
+    
 }

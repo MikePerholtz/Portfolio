@@ -2,7 +2,7 @@
 
 - [Portfolio To Do](#portfolio-to-do)
   - [Client App - Portfolio To Do](#client-app---portfolio-to-do)
-  - [<h3 id="security-81">Security</h3>](#h3-id%22security-81%22securityh3)
+  - [<h3 id="security-478">Security</h3>](#h3-id%22security-478%22securityh3)
   - [Backend (To Do)](#backend-to-do)
 
 ## Client App - [Portfolio To Do](#portfolio-to-do)
@@ -11,9 +11,28 @@
 ---
 - [ ] Setup User Secrets 
 
-    - [ ] Initialize User Secret Store located: `~/.microsoft/~/.microsoft/usersecrets/<user_secrets_id>/secrets.json
-  -  `dotnet user-secrets init`
-  -  dotnet user-secrets set "Movies:ServiceApiKey" "12345"
+  `Initialize` User Secret Store:
+    ```bash
+    dotnet user-secrets init
+    ```
+      
+  Secrets Located (Check .csproj for <user_secrets_id>):
+    ```
+    ~/.microsoft/usersecrets/<user_secrets_id>/secrets.json
+    ```
+
+    `CRUD` operations on a Secret:
+    ```bash
+    #create
+    dotnet user-secrets set "Portfolio:Database:DbPaxxword" "reallyStrongPwd123" 
+
+    #delete
+    dotnet user-secrets remove "Portfolio:Database:DbPaxxword"
+
+    #list
+    dotnet user-secrets list
+    ```
+
 
 See Also:
 

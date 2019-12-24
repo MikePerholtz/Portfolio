@@ -18,6 +18,7 @@ namespace Portfolio
         }
 
         public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
+            //mPerholtz: CreateDefaultBuilder calls AddUserSecrets when the EnvironmentName is Development
             WebHost.CreateDefaultBuilder(args)
                 .UseStartup<Startup>();
     }

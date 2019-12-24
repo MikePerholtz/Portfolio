@@ -4,7 +4,7 @@ import router from './routerMike'
 import BootstrapVue from 'bootstrap-vue'
 import "bootstrap/dist/css/bootstrap.min.css"
 import "bootstrap-vue/dist/bootstrap-vue.css"
-import store from './state_store/appState'
+import store from "./app-state/mainStore"
 ///
 
 
