@@ -5,7 +5,7 @@ Vue.use(Vuex);
 
 let authorization = {
     state: {
-
+        
     },
     mutations: {
 
@@ -14,7 +14,7 @@ let authorization = {
 
     },
     getters: {
-
+        
     }
 }
 
