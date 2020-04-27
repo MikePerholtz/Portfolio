@@ -36,6 +36,10 @@ namespace Portfolio.Data
     protected override void OnModelCreating(ModelBuilder bldr)
     {
       base.OnModelCreating(bldr);
+      // Customize the ASP.NET Core Identity model and override the defaults if needed.
+      // For example, you can rename the ASP.NET Core Identity table names and more.
+      // Add your customizations after calling base.OnModelCreating(builder);
+  
 
       bldr.Entity<ContactUsMessage>(e =>
       {

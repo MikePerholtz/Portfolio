@@ -41,18 +41,15 @@
 </template>
 
 <script>
+    
+    //import authorization from '../app-state/mainStore'
     import theMixin from '../mixins/mixins'
+
     //import _ from "lodash";
    
     
     export default {
         mixins: [theMixin],
-        // mixins: [theMixin(
-        //     {
-        //         centerFormVertically: true,
-        //         elemToCenter: "#login_pfo"
-        //     }
-        //)],
         data() {
             return {
                 centerFormVertically: true,
@@ -67,12 +64,18 @@
         
         methods: {
             onSubmit() {
-                alert(this.creds.username + " "+this.creds.password);
-            },
-            waitForIt() {
-
+                this.$store.dispatch("attemptToLogin",this.creds)
+                .then(() => {
+                  //let redirect = this.$store.getters.redirect;
+                  //this.$store.commit("clearRedirect");
+                  //this.$router.push(redirect);
+                })
+                .catch(() => {
+                  //this.isBusy = false;
+                  this.error = "Failed Login";
+                });
+                // alert(this.creds.username + " "+this.creds.password);
             }
-            
         }
     }
 </script>

@@ -8,11 +8,14 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using Portfolio.Data;
+using Portfolio.Models;
 using System.Text;
 using Microsoft.Extensions.Hosting;
 using VueCliMiddleware;
 using Portfolio.Config;
 using System.Data.SqlClient;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+
 //using Microsoft.AspNetCore.SpaServices.VueCli;
 //using Microsoft.AspNetCore.SpaServices.Webpack;
 
@@ -20,7 +23,7 @@ namespace Portfolio
 {
     public class Startup
     {
-        private string portfolioDbPaxxword = null;
+
         private string _connection = null;
         readonly IWebHostEnvironment HostingEnvironment;        
         public IConfiguration Configuration { get; }
@@ -65,6 +68,12 @@ namespace Portfolio
                 conf.UseSqlServer(_connection, opt => opt.EnableRetryOnFailure());
             });
             
+            services.AddIdentity<ApplicationUser, IdentityRole>(cfg =>
+            {
+                cfg.User.RequireUniqueEmail = true;
+            })
+            .AddEntityFrameworkStores<PortfolioContext>();
+            // AddEntityFrameworkStores can only be called with a user that derives from IdentityUser. If you are specifying more generic arguments, use IdentityBuilder.AddUserStore() instead."
             
             #region Strongly Typed Config Idea
             // mPerholtz => see Rick Strahl's Album Viewer:
@@ -78,17 +87,16 @@ namespace Portfolio
             //services.AddSingleton<IConfigurationRoot>(Configuration);
             #endregion Strongly Typed Config Idea
             
-            services.AddSingleton<IConfiguration>(Configuration);
 
-            services.AddIdentity<IdentityUser, IdentityRole>(cfg =>
+            services.AddAuthentication(cfg =>
             {
-                cfg.User.RequireUniqueEmail = true;
-            });
-            
-
-            services.AddAuthentication()
+                // mPerholtz for where I got these Default Authentication Scheme settings below then see:
+                // https://jasonwatmore.com/post/2019/10/11/aspnet-core-3-jwt-authentication-tutorial-with-example-api#startup-cs
+                // cfg.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                // cfg.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
             .AddJwtBearer(cfg =>
-            {
+            {  
                 cfg.TokenValidationParameters = new TokenValidationParameters()
                 {
                 ValidateIssuer = true,
@@ -108,6 +116,9 @@ namespace Portfolio
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
             
+            //mperholtz Not Sure this is needed
+            services.AddSingleton<IConfiguration>(Configuration);     
+
             // In production, the Vue files will be served from this directory
             services.AddSpaStaticFiles(configuration =>
             {
@@ -174,6 +185,7 @@ namespace Portfolio
             //app.UseMvcWithDefaultRoute();
 
             app.UseAuthentication();
+            app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {
